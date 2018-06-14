@@ -1,0 +1,124 @@
+1. I first thought HashTable,then group anagrams using HashTable only 
+   this method causes the time limitation problem,code folows:
+   
+   
+   class Solution {
+    public:
+    
+    bool IsEqual(vector<int> grouphash,vector<int> anagramhash){
+
+        int grouplen=grouphash.size(),anagramlen=anagramhash.size();
+
+        if(grouplen==anagramlen){
+
+            int i;
+
+            sort(grouphash.begin(),grouphash.end());
+            sort(anagramhash.begin(),anagramhash.end());
+
+            for(i=0;i<grouplen;i++)
+            {
+              if(grouphash[i]!=anagramhash[i])
+                 break;
+            }
+
+            if(i==grouplen)
+                return true;
+            else
+                return false;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+    vector<vector<string> > groupAnagrams(vector<string>& strs) {
+
+    vector<vector<string> > Anagrams;
+    vector<vector<int> > HashTable;
+    int group_num=0,str_num=strs.size();
+
+    int groupIndex,strIndex;
+
+    for(strIndex=0;strIndex<str_num;strIndex++){
+        vector<int> AnagramHash;
+        vector<string> Anagram;
+        string tmpStr=strs[strIndex];
+        int strlength=tmpStr.size();
+
+        int i;
+        for(i=0;i<strlength;i++)
+            AnagramHash.push_back(tmpStr[i]);
+
+        if(strIndex==0)
+        {
+            HashTable.push_back(AnagramHash);
+            Anagram.push_back(tmpStr);
+            Anagrams.push_back(Anagram);
+            group_num++;
+        }
+        else
+        {
+            int position=-1;
+            for(i=0;i<group_num;i++)
+            {
+                if(IsEqual(HashTable[i],AnagramHash))
+                {
+                    position=i;
+                    break;
+                }
+            }
+
+            if(position<0)
+            {
+               Anagram.push_back(tmpStr);
+               Anagrams.push_back(Anagram);
+               HashTable.push_back(AnagramHash);
+               group_num++;
+            }
+            else
+            {
+
+                Anagrams[position].push_back(tmpStr);
+            }
+
+        }
+
+    }
+
+    return Anagrams;
+    }
+};
+
+
+2. time limited means i should try another method
+   then i use hashtable combined with map,code follows:
+   
+   class Solution {
+    public:
+    vector<vector<string> > groupAnagrams(vector<string>& strs) {
+
+    vector<vector<string> > Anagrams;
+    map<string,vector<string>> groups;
+        
+    for(string str:strs){
+        vector<int> HashTable(26,0);  
+        string key="";
+        for(char ch:str)
+            HashTable[ch-'a']++;
+        
+        for(int value:HashTable)
+            key+=to_string(value)+'-';
+        
+        groups[key].push_back(str);
+    }
+        
+    for(auto ele:groups)
+        Anagrams.push_back(ele.second);
+
+    return Anagrams;
+    }
+};
+
+
