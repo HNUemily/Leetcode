@@ -1,0 +1,28 @@
+given a matrix,which represents a image,totate it
+just find the relationship between the original image and the rotated image,in both row and column aspects
+code follows:
+
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        
+        vector<vector<int> > rotate_matrix;
+        
+        int rowIndex,columnIndex;
+        int row=matrix.size();
+        int column=matrix.size();
+        for(columnIndex=0;columnIndex<column;columnIndex++)
+        {
+            vector<int> rowValue;
+            for(rowIndex=row-1;rowIndex>=0;rowIndex--)
+                rowValue.push_back(matrix[rowIndex][columnIndex]);
+            
+            rotate_matrix.push_back(rowValue);
+        }
+        
+        
+        for(rowIndex=0;rowIndex<row;rowIndex++)
+            for(columnIndex=0;columnIndex<column;columnIndex++)
+                matrix[rowIndex][columnIndex]=rotate_matrix[rowIndex][columnIndex];
+    }
+};
