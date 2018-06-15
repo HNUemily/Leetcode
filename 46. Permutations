@@ -1,0 +1,37 @@
+using dfs to realize permute,code follows:
+
+class Solution {
+public:
+    void dfs(vector<int>& nums,vector<int>& apermute,vector<vector<int> >& permutes,vector<int>& visited){
+        
+        int count=0;
+        int index,length=visited.size();
+        for(index=0;index<length;index++){
+            
+           if(visited[index]==0){
+            visited[index]=1;
+            apermute.push_back(nums[index]);
+            dfs(nums,apermute,permutes,visited);
+            apermute.pop_back();
+            visited[index]=0;
+           }
+            else
+                count++;
+        }
+        
+        if(count==length)
+            permutes.push_back(apermute);
+    }
+    
+    
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int> > permutes;
+        
+        int length=nums.size();
+        vector<int> visited(length,0);
+        vector<int> apermute;
+        
+        dfs(nums,apermute,permutes,visited);
+        return permutes;
+    }
+};
