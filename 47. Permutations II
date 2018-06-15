@@ -1,0 +1,55 @@
+using backtracing to solve this problem(the same as problem 46)
+
+but in this problem vector nums may contain same numbers,
+in backtracing process,the subsequence should begin with unique number.
+so 
+1.first sort the vector nums,make sure same numbers are in the neighborhood with each other. 
+2.make sure the backtrace process begins with different numbers:
+  if(index>0&&nums[index]==nums[index-1]&&visited[index-1]==0)
+                   continue;
+
+code follows:
+class Solution {
+public:
+    
+    void backtrace(vector<int>& nums,vector<int>& visited,vector<int>& apermute,vector<vector<int> >& permutes){
+        
+        int index,length=nums.size();
+        int count=0;
+        for(index=0;index<length;index++){
+            
+            if(visited[index]==0){
+               if(index>0&&nums[index]==nums[index-1]&&visited[index-1]==0)
+                   continue;
+                else{
+                    visited[index]=1;
+                    apermute.push_back(nums[index]);
+                    backtrace(nums,visited,apermute,permutes);
+                    apermute.pop_back();
+                    visited[index]=0;
+                }
+            }
+            else{
+                count++;
+            }
+        }
+        
+        if(count==length)
+            permutes.push_back(apermute);
+        
+    }
+    
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        
+        sort(nums.begin(),nums.end());
+        
+        vector<vector<int> > permutes;
+        vector<int> visited(nums.size(),0);
+        vector<int> apermute;
+        
+        backtrace(nums,visited,apermute,permutes);
+        
+        return permutes;
+        
+    }
+};
