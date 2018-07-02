@@ -1,0 +1,46 @@
+题目：Determine if a 9x9 Sudoku board is valid。判断是否符合数独的标准
+（ps 在组合数学中有产生数独的方法，后续补上）
+
+使用hashtable即可，判断每个数字是否在每个row，column，block中仅出现一次
+
+
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        
+        int i,j;
+        
+        int rowTable[9][10],colTable[9][10],blockTable[9][10];
+        bool is=true;
+        
+        memset(rowTable,true,sizeof(rowTable));
+        memset(colTable,true,sizeof(colTable));
+        memset(blockTable,true,sizeof(blockTable));
+        
+        for(i=0;i<9;i++)
+        {
+             for(j=0;j<9;j++)
+            {
+                int num=board[i][j]-'0';
+                if(num>0&&num<10)
+                {
+                    if(rowTable[i][num]&&colTable[j][num]&&blockTable[(i/3)*3+j/3][num])
+                    {
+                        rowTable[i][num]=false;
+                         colTable[j][num]=false;
+                         blockTable[(i/3)*3+j/3][num]=false;
+                    }else{
+                        is=false;
+                        break;
+                    }
+                }
+                
+            }
+         if(!is)
+        break;
+        
+    }
+    
+    return is;
+}
+};
