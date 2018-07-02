@@ -1,0 +1,45 @@
+使用简单的二分法确定position
+
+1. pair<int,int>模板记录（begin，end）tuple二元组
+2. 简单的递归可以不使用函数，使用stack来实现
+3. 需要考虑middl和begin end之间的位置关系，判断需要插入的位置是否越界
+
+class Solution {
+public:
+    
+    int searchInsert(vector<int>& nums, int target) {
+        
+       int middle;
+       stack<pair<int,int> > st;
+        
+       st.push(pair<int,int>(0,nums.size()-1));
+        
+       while(!st.empty()){
+           
+           pair<int,int> tmp=st.top();
+           st.pop();
+           middle=(tmp.first+tmp.second)/2;
+           
+           if(nums[middle]==target)
+               return middle;
+           else if(nums[middle]>target){
+                
+               if(middle==tmp.first)
+                   return tmp.first;
+               else
+                   st.push(pair<int,int>(tmp.first,middle-1));
+               
+           }else{
+               
+               if(middle==tmp.second)
+                   return tmp.second+1;
+               else
+                   st.push(pair<int,int>(middle+1,tmp.second));   
+           }
+       }
+        
+    }
+};
+
+
+
