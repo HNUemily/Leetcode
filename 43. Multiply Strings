@@ -1,0 +1,131 @@
+实现乘法，其中两个乘数都是通过字符串保存。
+
+method 1：按照大整数乘法的方法来做的，整个过程需要细心和耐心，这不是一个很好的解决方法。可以直使用直接相乘的方法method2
+
+但是int转化成string的方法很值得学习：
+头文件<sstream>
+string s;
+int tmp;
+stringstream ss;
+
+1）针对不同的int，需要定义不同的ss，也就是说上述定义的ss只适合tmp到s的转换，不适合另一整型 b。
+2）尤其是在循环中，在使用stringstream之前需要清理stringstream的缓存，否则会占用很多内存。
+
+ss.str(""); //清理缓存
+ss<<tmp;
+ss>>s;
+
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        
+        int i,j;
+        vector<int> vnum1,vnum2,vmul;
+        int num=0;
+        string nums1_mul_nums2="";
+        stringstream ss;
+        
+        for(i=num1.size()-4;i>=0;i-=4){
+            num=0;    
+            for(j=0;j<4;j++)
+                num=num*10+num1[i+j]-'0';
+            
+            vnum1.push_back(num);          
+        }   
+        i+=4;
+        
+        if(i>0){
+            
+            num=0;
+            for(j=0;j<i;j++)
+                num=num*10+num1[j]-'0';
+            vnum1.push_back(num);
+        }
+        
+        for(i=num2.size()-4;i>=0;i-=4){
+            
+            num=0;
+            for(j=0;j<4;j++)
+                num=num*10+num2[i+j]-'0';
+            
+            vnum2.push_back(num);      
+        }
+        i+=4;
+        
+        if(i>0){
+            num=0;
+            for(j=0;j<i;j++)
+                num=num*10+num2[j]-'0';
+            vnum2.push_back(num);
+        }
+            
+            for(i=0;i<vnum1.size();i++)
+            {
+                int in=0;
+                int tmp;
+                for(j=0;j<vnum2.size();j++)
+                {
+                    int mul_tmp=vnum1[i]*vnum2[j]+in;
+                    tmp=mul_tmp%10000;
+                    in=mul_tmp/10000;
+                    
+                    if(mul_tmp){
+                        
+                    if(i+j+1>vmul.size())
+                        vmul.push_back(tmp);
+                    else
+                    {
+                        int add_tmp=vmul[i+j]+tmp;
+                        in+=add_tmp/10000;
+                        vmul[i+j]=add_tmp%10000;
+                    }
+                    }
+                }
+                
+                int index=i+j+1;
+                while(in>0){
+                    
+                    if(vmul.size()>index){
+                        int add_tmp=in+vmul[index];
+                        vmul[index]=add_tmp/10000;
+                        in=add_tmp%10000;
+                        index++;
+                        
+                    }else{ 
+                        vmul.push_back(in);
+                        in=0;
+                    }
+                }
+            }
+        
+        
+        if(vmul.size()==0)
+            nums1_mul_nums2="0";
+        else{
+        int tmp=vmul[vmul.size()-1];
+        string s_first;
+        ss<<tmp;
+        ss>>s_first;
+        nums1_mul_nums2+=s_first;
+        
+        for(i=vmul.size()-2;i>=0;i--)
+        {
+            tmp=vmul[i];
+            string s;
+            stringstream ss2;
+            
+            ss2.str("");
+            ss2<<tmp;
+            ss2>>s;
+            while(s.size()<4)
+                s="0"+s;
+            
+            nums1_mul_nums2+=s;
+        }
+            
+        }
+        
+        return nums1_mul_nums2;
+        
+    }
+};
