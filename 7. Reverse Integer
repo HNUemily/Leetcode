@@ -1,0 +1,47 @@
+long reverse_x
+使用reverse_x>INT32_MAX||reverse_x<INT32_MIN判断是否越界
+ 
+ 
+ method 1：
+ class Solution {
+public:
+    int reverse(int x) {
+
+        int reverse_x=0;
+        int tmp;
+        
+        while(x){
+            
+         reverse_x=reverse_x*10+x%10;
+         if(reverse_x>INT32_MAX||reverse_x<INT32_MIN) return 0;
+        
+         reverse_x=tmp;
+         x/=10;
+        }
+        
+        return reverse_x;
+    }
+};
+
+ 
+ method 2：
+class Solution {
+public:
+    int reverse(int x) {
+
+        int reverse_x=0;
+        int tmp;
+        
+        while(x){
+            
+         tmp=reverse_x*10+x%10;
+         if(reverse_x!=tmp/10) return 0;  //越界会向上或向下溢出
+        
+         reverse_x=tmp;
+         x/=10;
+        }
+        
+        return reverse_x;
+    }
+};
+ 
