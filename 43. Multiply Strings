@@ -129,3 +129,50 @@ public:
         
     }
 };
+
+method2 相比於method1這個方法就簡單多了，運行時間也比method1要短
+直接按位相乘，進行運算得到in和當前值(attention:需要注意計算的當前值在result的哪一個位置)
+
+可以學習的string操作：
+初始化string s(size,char);
+使用STL reverse函數對string進行翻轉 reverse(s.begi(),s.end());
+對string進行erase s.erase(beginposition,erasecount);
+
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        
+        int i,j;
+        int count=0;
+        string result(num1.size()+num2.size()+1,'0');
+        
+        reverse(num1.begin(),num1.end());
+        reverse(num2.begin(),num2.end());
+        
+        int in;
+        for(i=0;i<num1.size();i++)
+        {
+            in=0;
+            for(j=0;j<num2.size();j++){
+                int tmp=(num2[j]-'0')*(num1[i]-'0')+result[i+j]-'0'+in;
+                in=tmp/10;
+                result[i+j]=tmp%10+'0';
+            }
+            
+            if(in>0)
+                result[i+j]=in+'0';
+        }
+        
+        reverse(result.begin(),result.end());
+        
+        while(count<result.size()-1&&result[count]=='0')
+            count++;
+        
+        result.erase(0,count);
+        
+        return result;
+    }
+};
+
+
+
