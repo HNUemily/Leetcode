@@ -1,0 +1,83 @@
+求一個序列中最大的會問序
+
+1. method 1使用dp的方法來做，完成初始化之後，根據序列的長度和起始位置動態規劃將會問序列子序列的信息存放在cnt二維數組中
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+    
+        int i,j;
+        vector<int> tmp(s.size(),0);
+        vector<vector<int> > cnt;
+        
+        for(i=0;i<s.size();i++)
+            cnt.push_back(tmp);
+        
+        for(i=0;i<s.size()-1;i++)
+           if(s[i]==s[i+1])
+               cnt[i][i+1]=2;
+        for(i=0;i<s.size();i++)
+            cnt[i][i]=1;
+        
+        for(int i=2;i<s.size();i++)  //length和start position
+            for(int j=0;j<s.size();j++)
+            {
+                if(j+i<s.size()){
+                    if(cnt[j+1][i+j-1])
+                        cnt[j][i+j]=0;
+                    else if(s[j]==s[j+i])
+                        cnt[j][i+j]=cnt[j+1][i+j-1]+2;
+                    else
+                        cnt[j][i+j]=0;
+                }
+            }
+        
+        int maxcnt=cnt[0][0],startP=0,endP=0;
+        
+        for(i=0;i<s.size();i++)
+            for(j=i+1;j<s.size();j++)
+                if(cnt[i][j]>maxcnt){
+                    maxcnt=cnt[i][j];
+                    startP=i;
+                    endP=j;
+                }
+        
+        return s.substr(startP,endP-startP+1);
+    }
+};
+
+
+method1是比較通用的方法，但是運行時間較長。
+method2是比較普通的方法，不記錄每一步的結果，只記錄當前的最長size和起始位置
+其中，注意一段代碼：
+class Solution {
+public:
+    string longestPalindrome(string s) {
+    
+        int max_len=0,bpos=0;
+        int i,len_l,len_r;
+        int s_len=s.size();
+        
+        for(i=0;i<s_len;i++)
+        {
+            len_l=len_r=i;
+            
+            while(len_r+1<s_len&&s[len_r]==s[len_r+1])  //處理連續相同的序列。
+                len_r++;  //
+            i=len_r; //
+            
+            while(len_l>0&&len_r+1<s_len&&s[len_l-1]==s[len_r+1])
+            {
+                len_l--;
+                len_r++;
+            }
+            
+            if(len_r-len_l+1>max_len){
+                max_len=len_r-len_l+1;
+                bpos=len_l;
+            }
+        }
+        
+        return s.substr(bpos,max_len);
+    }
+};
